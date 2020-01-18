@@ -1,15 +1,22 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {latLng, marker, tileLayer, Map, LeafletMouseEvent, Marker} from 'leaflet';
+import {User, UserService} from '../../services/user.service';
+import {Observable} from 'rxjs';
+import GeoPoint = firebase.firestore.GeoPoint;
+// noinspection ES6UnusedImports
+import * as firebase from 'firebase';
 
 @Component({
     selector: 'app-map',
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent /*implements AfterViewInit*/ {
 
     map: Map;
     marker: Marker = marker(latLng(0, 0));
+    userObservable: Observable<User>;
+    user: User;
 
     options = {
         layers: [
@@ -26,35 +33,29 @@ export class MapComponent implements AfterViewInit {
         this.marker
     ];
 
-    constructor() {
+    private userId = `CvOTX27bh5959fgbmSHV`;
+
+    constructor(private userService: UserService) {
+        this.userObservable = userService.GetUserById(this.userId);
+        this.userObservable.subscribe(user => {
+            const latlng = latLng(user.lastLocation.latitude, user.lastLocation.longitude);
+            this.map.setView(latlng, 18);
+            this.marker.setLatLng(latlng);
+            this.user = user;
+        });
     }
 
     onMapReady(map: Map) {
         this.map = map;
 
-        navigator.geolocation.getCurrentPosition(position => {
-            map.setView(latLng(position.coords.latitude, position.coords.longitude), 15);
-        });
+        /*        navigator.geolocation.getCurrentPosition(position => {
+                    map.setView(latLng(position.coords.latitude, position.coords.longitude), 15);
+                });*/
     }
 
-    ngAfterViewInit(): void {
-        //this.initMap();
-    }
-
-    initMap(): void {
-        this.map = new Map('map').setView([33.6396965, -84.4304574], 23);
-
-        tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(this.map);
-
-        navigator.geolocation.getCurrentPosition(position => {
-            this.map.setView(latLng(position.coords.latitude, position.coords.longitude), 15);
-        });
-    }
-
-    private mapClick(e: LeafletMouseEvent): void {
-        this.marker.setLatLng(e.latlng);
+    mapClick(e: LeafletMouseEvent): void {
+        this.user.lastLocation = new GeoPoint(e.latlng.lat, e.latlng.lng);
+        this.userService.UpdateUser(this.userId, this.user);
     }
 
     centerMap() {
@@ -64,4 +65,20 @@ export class MapComponent implements AfterViewInit {
             this.marker.setLatLng(latlng);
         });
     }
+
+    /*    ngAfterViewInit(): void {
+            //this.initMap();
+        }
+
+        initMap(): void {
+            this.map = new Map('map').setView([33.6396965, -84.4304574], 23);
+
+            tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(this.map);
+
+            navigator.geolocation.getCurrentPosition(position => {
+                this.map.setView(latLng(position.coords.latitude, position.coords.longitude), 15);
+            });
+        }*/
 }
