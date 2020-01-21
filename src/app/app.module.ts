@@ -13,6 +13,8 @@ import {AngularFireAnalyticsModule} from '@angular/fire/analytics';
 import {AngularFirestoreModule} from '@angular/fire/firestore';
 import {firebaseConfig} from '../environments/environment';
 import {AngularFireAuthModule} from '@angular/fire/auth';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
 
 @NgModule({
     declarations: [AppComponent],
@@ -24,7 +26,14 @@ import {AngularFireAuthModule} from '@angular/fire/auth';
         AngularFireModule.initializeApp(firebaseConfig, 'web'),
         AngularFireAnalyticsModule,
         AngularFirestoreModule,
-        AngularFireAuthModule
+        AngularFireAuthModule,
+        StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true
+      }
+    })
     ],
     providers: [
         StatusBar,
