@@ -4,6 +4,9 @@ import {Platform} from '@ionic/angular';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {AngularFireAuth} from '@angular/fire/auth';
+import {Store} from '@ngrx/store';
+import {State} from './data/reducers';
+import {userLoggedIn, userLoggedOut} from './data/actions/auth.actions';
 
 @Component({
     selector: 'app-root',
@@ -16,6 +19,7 @@ export class AppComponent {
         private splashScreen: SplashScreen,
         private statusBar: StatusBar,
         private fAuth: AngularFireAuth,
+        private store: Store<State>
     ) {
         this.initializeApp();
     }
@@ -31,9 +35,10 @@ export class AppComponent {
     private InitAuth() {
         this.fAuth.auth.onAuthStateChanged(userInfo => {
             if (userInfo) {
-                console.log(userInfo.toJSON());
+                const {uid, displayName, email} = userInfo;
+                this.store.dispatch(userLoggedIn({uid, email, displayName}));
             } else {
-                console.log(`User ${userInfo.email} has logged out`);
+                this.store.dispatch(userLoggedOut());
             }
         });
     }
