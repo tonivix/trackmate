@@ -28,12 +28,12 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'tab3',
+        path: 'register',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+              import('../register/register.module').then(m => m.RegisterPageModule)
           }
         ]
       },

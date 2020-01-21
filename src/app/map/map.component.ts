@@ -2,9 +2,7 @@ import {Component} from '@angular/core';
 import {latLng, marker, tileLayer, Map, LeafletMouseEvent, Marker} from 'leaflet';
 import {User, UserService} from '../../services/user.service';
 import {Observable} from 'rxjs';
-import GeoPoint = firebase.firestore.GeoPoint;
-// noinspection ES6UnusedImports
-import * as firebase from 'firebase';
+import { firestore } from 'firebase';
 
 @Component({
     selector: 'app-map',
@@ -20,7 +18,7 @@ export class MapComponent /*implements AfterViewInit*/ {
 
     options = {
         layers: [
-            tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 18,
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
             }),
@@ -54,7 +52,7 @@ export class MapComponent /*implements AfterViewInit*/ {
     }
 
     mapClick(e: LeafletMouseEvent): void {
-        this.user.lastLocation = new GeoPoint(e.latlng.lat, e.latlng.lng);
+        this.user.lastLocation = new firestore.GeoPoint(e.latlng.lat, e.latlng.lng);
         this.userService.UpdateUser(this.userId, this.user);
     }
 
