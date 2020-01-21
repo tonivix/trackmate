@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-item>{{ auth$ | async }}</ion-item>
+  <ion-item>{{(auth$ | async).email}}</ion-item>
   <ion-item>
     <ion-label>Email Address</ion-label>
     <ion-input type="text" [(ngModel)]="user.email"></ion-input>

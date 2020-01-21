@@ -24,7 +24,6 @@ export class RegisterPage {
     constructor(private navCtrl: NavController,
                 private fAuth: AngularFireAuth,
                 private store: Store<fromAuth.State>) {
-        this.auth$.subscribe(auth => console.log(auth));
     }
 
     async register() {

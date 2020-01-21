@@ -7,6 +7,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import {Store} from '@ngrx/store';
 import {State} from './data/reducers';
 import {userLoggedIn, userLoggedOut} from './data/actions/auth.actions';
+import {ToasterService} from '../services/UI/toast/toaster.service';
 
 @Component({
     selector: 'app-root',
@@ -19,7 +20,8 @@ export class AppComponent {
         private splashScreen: SplashScreen,
         private statusBar: StatusBar,
         private fAuth: AngularFireAuth,
-        private store: Store<State>
+        private store: Store<State>,
+        private toasterService: ToasterService
     ) {
         this.initializeApp();
     }
@@ -29,6 +31,7 @@ export class AppComponent {
             this.statusBar.styleDefault();
             this.splashScreen.hide();
             this.InitAuth();
+            this.toasterService.initialize();
         });
     }
 
