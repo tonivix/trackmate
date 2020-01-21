@@ -20,17 +20,29 @@ export class UserService {
     }
 
     public GetUserById(id: string): Observable<User> {
-        const doc = this.db.doc<User>(`users/${id}`);
-        return doc.valueChanges();
+        try {
+            const doc = this.db.doc<User>(`users/${id}`);
+            return doc.valueChanges();
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     public GetUsers(): Observable<User[]> {
-        const collection = this.db.collection<User>(`users`);
-        return collection.valueChanges();
+        try {
+            const collection = this.db.collection<User>(`users`);
+            return collection.valueChanges();
+        } catch (e) {
+            console.error(e);
+        }
     }
 
-    public UpdateUser(id: string, user: User) {
-        const doc = this.db.doc<User>(`users/${id}`);
-        doc.update(user);
+    public async UpdateUser(id: string, user: User) {
+        try {
+            const doc = this.db.doc<User>(`users/${id}`);
+            await doc.update(user);
+        } catch (err) {
+            console.error(err);
+        }
     }
 }

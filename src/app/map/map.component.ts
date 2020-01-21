@@ -31,13 +31,13 @@ export class MapComponent /*implements AfterViewInit*/ {
         this.marker
     ];
 
-    private userId = `CvOTX27bh5959fgbmSHV`;
+    private userId = `1HSrrfexcYcLVG8PkJ6UrnesEI33`;
 
     constructor(private userService: UserService) {
         this.userObservable = userService.GetUserById(this.userId);
         this.userObservable.subscribe(user => {
             const latlng = latLng(user.lastLocation.latitude, user.lastLocation.longitude);
-            this.map.setView(latlng, 18);
+            this.map.panTo(latlng);
             this.marker.setLatLng(latlng);
             this.user = user;
         });
