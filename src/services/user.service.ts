@@ -1,22 +1,16 @@
 import {Injectable} from '@angular/core';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
-import Timestamp = firebase.firestore.Timestamp;
-import GeoPoint = firebase.firestore.GeoPoint;
-// noinspection ES6UnusedImports
-import * as firebase from 'firebase';
-
-export interface User {
-    name: string;
-    lastLocation: GeoPoint;
-    birthday: Timestamp;
-}
+import {select, Store} from '@ngrx/store';
+import * as fromAuth from '../app/data/reducers/auth.reducer';
+import {selectCurrentUser, User} from '../app/data/reducers/auth.reducer';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserService {
-    constructor(private db: AngularFirestore) {
+    constructor(private db: AngularFirestore,
+                private store: Store<fromAuth.User>) {
     }
 
     public GetUserById(id: string): Observable<User> {
@@ -43,6 +37,18 @@ export class UserService {
             await doc.update(user);
         } catch (err) {
             console.error(err);
+        }
+    }
+
+    public GetCurrentUser(): Observable<User> {
+        return this.store.pipe(select(selectCurrentUser));
+    }
+
+    public async InsertUser(id: string, user: User) {
+        try {
+            this.db.collection('cities').doc(id).set(user);
+        } catch (e) {
+            console.error(e);
         }
     }
 }

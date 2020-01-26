@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-item>{{(auth$ | async).email}}</ion-item>
+  <ion-item>{{(auth$ | async).displayName}}</ion-item>
   <ion-item>
     <ion-label>Email Address</ion-label>
     <ion-input type="text" [(ngModel)]="user.email"></ion-input>
@@ -19,5 +19,7 @@
   <ion-button (click)="login()">Login</ion-button>
   <ion-button (click)="register()">Register</ion-button>
   <ion-button (click)="logout()">Logout</ion-button>
+  <ion-button (click)="google()">Google</ion-button>
+  <ion-button (click)="facebook()">Facebook</ion-button>
 
 </ion-content>

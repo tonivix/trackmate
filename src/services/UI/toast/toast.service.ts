@@ -8,16 +8,16 @@ import {takeUntil} from 'rxjs/operators';
 @Injectable({
     providedIn: 'root'
 })
-export class ToasterService implements OnDestroy {
+export class ToastService implements OnDestroy {
 
     constructor(public toastController: ToastController,
-                private store: Store<fromAuth.State>) {
+                private store: Store<fromAuth.User>) {
     }
 
     destroy$: Subject<boolean> = new Subject<boolean>();
 
     public initialize() {
-        const auth$: Observable<fromAuth.State> = this.store.pipe(select(fromAuth.selectCurrentUser),
+        const auth$: Observable<fromAuth.User> = this.store.pipe(select(fromAuth.selectCurrentUser),
             takeUntil(this.destroy$));
         auth$.subscribe(auth => this.presentToast(`${auth.email} has logged in`));
     }

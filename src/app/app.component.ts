@@ -7,7 +7,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import {Store} from '@ngrx/store';
 import {State} from './data/reducers';
 import {userLoggedIn, userLoggedOut} from './data/actions/auth.actions';
-import {ToasterService} from '../services/UI/toast/toaster.service';
+import {ToastService} from '../services/UI/toast/toast.service';
 
 @Component({
     selector: 'app-root',
@@ -21,7 +21,7 @@ export class AppComponent {
         private statusBar: StatusBar,
         private fAuth: AngularFireAuth,
         private store: Store<State>,
-        private toasterService: ToasterService
+        private toasterService: ToastService
     ) {
         this.initializeApp();
     }

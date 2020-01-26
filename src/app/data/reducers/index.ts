@@ -6,7 +6,7 @@ import * as fromAuth from './auth.reducer';
 import {environment} from '../../../environments/environment';
 
 export interface State {
-    auth: fromAuth.State;
+    auth: fromAuth.User;
 }
 
 export const reducers: ActionReducerMap<State> = {

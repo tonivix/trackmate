@@ -4,6 +4,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import {select, Store} from '@ngrx/store';
 import * as fromAuth from '../data/reducers/auth.reducer';
 import {Observable} from 'rxjs';
+import {auth} from 'firebase';
 
 export class User {
     email: string;
@@ -19,11 +20,11 @@ export class RegisterPage {
 
     public user: User = new User();
 
-    public auth$: Observable<fromAuth.State> = this.store.pipe(select(fromAuth.selectCurrentUser));
+    public auth$: Observable<fromAuth.User> = this.store.pipe(select(fromAuth.selectCurrentUser));
 
     constructor(private navCtrl: NavController,
                 private fAuth: AngularFireAuth,
-                private store: Store<fromAuth.State>) {
+                private store: Store<fromAuth.User>) {
     }
 
     async register() {
@@ -60,5 +61,13 @@ export class RegisterPage {
         } catch (err) {
             console.error(err);
         }
+    }
+
+    async google() {
+        await this.fAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+    }
+
+    async facebook() {
+        await this.fAuth.auth.signInWithPopup(new auth.FacebookAuthProvider());
     }
 }

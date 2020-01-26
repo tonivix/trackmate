@@ -1,15 +1,17 @@
 import {Action, createFeatureSelector, createReducer, createSelector, on} from '@ngrx/store';
 import * as AuthActions from '../actions/auth.actions';
+import GeoPoint = firebase.firestore.GeoPoint;
 
 export const authFeatureKey = 'auth';
 
-export interface State {
+export interface User {
     uid: string;
     email: string;
     displayName: string;
+    lastLocation: GeoPoint;
 }
 
-export const initialState: State = {uid: null, email: null, displayName: null};
+export const initialState: User = {uid: null, email: null, displayName: null, lastLocation: null};
 
 const authReducer = createReducer(
     initialState,
@@ -17,10 +19,10 @@ const authReducer = createReducer(
     on(AuthActions.userLoggedOut, () => ({uid: null, email: null, displayName: null}))
 );
 
-export function reducer(state: State | undefined, action: Action) {
+export function reducer(state: User | undefined, action: Action) {
     return authReducer(state, action);
 }
 
-export const selectAuth = createFeatureSelector<State>(authFeatureKey);
+export const selectAuth = createFeatureSelector<User>(authFeatureKey);
 
 export const selectCurrentUser = createSelector(selectAuth, (state) => state);
