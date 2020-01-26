@@ -1,5 +1,5 @@
 import {createAction, props} from '@ngrx/store';
-import {User} from '../../services/user.service';
+import {User} from '../reducers/user.reducer';
 
 export interface UserLoggedInPayload {
     uid: string;

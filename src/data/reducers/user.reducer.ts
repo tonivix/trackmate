@@ -1,7 +1,5 @@
 import {Action, createFeatureSelector, createReducer, createSelector, on} from '@ngrx/store';
 import * as UserActions from '../actions/user.actions';
-// @ts-ignore
-import GeoPoint = firebase.firestore.GeoPoint;
 
 export const userFeatureKey = 'user';
 
@@ -9,19 +7,29 @@ export interface User {
     uid: string;
     email: string;
     displayName: string;
-    lastLocation: GeoPoint;
+    lastLocation: UserLocation;
+}
+
+export interface UserLocation {
+    latitude: number;
+    longitude: number;
 }
 
 export const initialState: User = {
     uid: '',
     email: '',
     displayName: '',
-    lastLocation: new GeoPoint(1, 1)
+    lastLocation: {latitude: 1, longitude: 1}
 };
 
 const userReducer = createReducer(
     initialState,
-    on(UserActions.userLoaded, (state: User, newState) => (newState)),
+    on(UserActions.userLoaded, (state: User, newState) => ({
+        displayName: newState.displayName,
+        email: newState.email,
+        lastLocation: newState.lastLocation,
+        uid: newState.uid
+    })),
     on(UserActions.userLoggedOut, () => initialState)
 );
 

@@ -17,8 +17,13 @@ export class UserEffects {
         ofType(userLoggedIn),
         switchMap(action => this.userService.GetUserById(action.uid)
             .pipe(
-                tap(user => this.toastService.presentToast(`User logged in: ${user.displayName}`)),
-                map(user => userLoaded(user)) // todo: Ajustar Store / DB pois há conflitos
+                tap(user => this.toastService.presentToast(`User logged in: ${user.email}`)),
+                map(user => userLoaded({
+                    displayName: user.displayName,
+                    uid: user.uid,
+                    email: user.email,
+                    lastLocation: { latitude: user.lastLocation.latitude, longitude: user.lastLocation.longitude}
+                })) // todo: Ajustar Store / DB pois há conflitos
             ))
     ));
 

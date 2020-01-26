@@ -1,15 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
-// @ts-ignore
-import GeoPoint = firebase.firestore.GeoPoint;
-
-export interface User {
-    uid: string;
-    email: string;
-    displayName: string;
-    lastLocation: GeoPoint;
-}
+import {User} from '../data/reducers/user.reducer';
 
 @Injectable({
     providedIn: 'root'
