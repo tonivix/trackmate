@@ -6,6 +6,13 @@ export interface UserLoggedInPayload {
     email: string;
     displayName: string;
 }
-export const userLoggedIn = createAction('[Auth] User Logged In', props<UserLoggedInPayload>());
-export const userLoaded = createAction('[Auth] User Data Loaded from Db', props<User>());
-export const userLoggedOut = createAction('[Auth] User Logged Out');
+
+export interface UserLocationPayload {
+    latitude: number;
+    longitude: number;
+}
+
+export const userLoggedIn = createAction('[User] User Logged In', props<UserLoggedInPayload>());
+export const userLoaded = createAction('[User] User Data Loaded from Db', props<User>());
+export const userLocationUpdate = createAction('[User] User Location Update', props<UserLocationPayload>());
+export const userLoggedOut = createAction('[User] User Logged Out');

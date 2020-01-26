@@ -1,12 +1,12 @@
 import {Component, OnDestroy} from '@angular/core';
-import {latLng, marker, tileLayer, Map, LeafletMouseEvent, Marker} from 'leaflet';
+import {latLng, marker, tileLayer, Map, LeafletMouseEvent, Marker, LatLngExpression} from 'leaflet';
 import {User, UserService} from '../../services/user.service';
 import {Observable, Subject} from 'rxjs';
-import {firestore} from 'firebase';
 import {select, Store} from '@ngrx/store';
 import * as fromUser from '../../data/reducers/user.reducer';
 import {selectCurrentUser} from '../../data/reducers/user.reducer';
 import {takeUntil} from 'rxjs/operators';
+import {userLocationUpdate} from '../../data/actions/user.actions';
 
 @Component({
     selector: 'app-map',
@@ -19,6 +19,7 @@ export class MapComponent implements OnDestroy {
     marker: Marker = marker(latLng(0, 0));
     userObservable: Observable<User>;
     user: User;
+    initialLatLng: LatLngExpression;
 
     options = {
         layers: [
@@ -34,32 +35,39 @@ export class MapComponent implements OnDestroy {
     layers = [
         this.marker
     ];
-    private destroy$: Subject<boolean>;
 
-    constructor(private store: Store<fromUser.User>,
-                private userService: UserService
+    destroy$: Subject<boolean> = new Subject<boolean>();
+
+    constructor(private store: Store<fromUser.User>
     ) {
         this.store.pipe(select(selectCurrentUser))
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(user => {
-            const latlng = latLng(user.lastLocation.latitude, user.lastLocation.longitude);
-            this.map.panTo(latlng);
-            this.marker.setLatLng(latlng);
-            this.user = user;
-        });
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(user => {
+                this.initialLatLng = latLng(user.lastLocation.latitude, user.lastLocation.longitude);
+                this.user = user;
+                if (this.map) {
+                    this.setInitialMapLocation();
+                }
+            });
+    }
+
+    private setInitialMapLocation() {
+        this.map.panTo(this.initialLatLng);
+        this.marker.setLatLng(this.initialLatLng);
     }
 
     onMapReady(map: Map) {
         this.map = map;
+
+        this.setInitialMapLocation();
 
         /*        navigator.geolocation.getCurrentPosition(position => {
                     map.setView(latLng(position.coords.latitude, position.coords.longitude), 15);
                 });*/
     }
 
-    async mapClick(e: LeafletMouseEvent): Promise<void> {
-        this.user.lastLocation = new firestore.GeoPoint(e.latlng.lat, e.latlng.lng);
-        await this.userService.UpdateUser(this.user.uid, this.user);
+    mapClick(e: LeafletMouseEvent): void {
+        this.store.dispatch(userLocationUpdate({latitude: e.latlng.lat, longitude: e.latlng.lng}));
     }
 
     centerMap() {
