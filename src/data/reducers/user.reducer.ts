@@ -1,7 +1,7 @@
 import {Action, createFeatureSelector, createReducer, createSelector, on} from '@ngrx/store';
 import * as UserActions from '../actions/user.actions';
+// @ts-ignore
 import GeoPoint = firebase.firestore.GeoPoint;
-import * as firebase from 'firebase';
 
 export const userFeatureKey = 'user';
 
