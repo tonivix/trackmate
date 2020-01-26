@@ -14,7 +14,9 @@ import {AngularFirestoreModule} from '@angular/fire/firestore';
 import {firebaseConfig} from '../environments/environment';
 import {AngularFireAuthModule} from '@angular/fire/auth';
 import {StoreModule} from '@ngrx/store';
-import {reducers, metaReducers} from './data/reducers';
+import {reducers, metaReducers} from '../data/reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { UserEffects } from '../data/effects/user.effects';
 
 @NgModule({
     declarations: [AppComponent],
@@ -33,7 +35,8 @@ import {reducers, metaReducers} from './data/reducers';
                 strictStateImmutability: true,
                 strictActionImmutability: true
             }
-        })
+        }),
+        EffectsModule.forRoot([UserEffects])
     ],
     providers: [
         StatusBar,

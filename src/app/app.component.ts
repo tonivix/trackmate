@@ -5,8 +5,8 @@ import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {Store} from '@ngrx/store';
-import {State} from './data/reducers';
-import {userLoggedIn, userLoggedOut} from './data/actions/auth.actions';
+import {State} from '../data/reducers';
+import {userLoggedIn, userLoggedOut} from '../data/actions/user.actions';
 import {ToastService} from '../services/UI/toast/toast.service';
 
 @Component({

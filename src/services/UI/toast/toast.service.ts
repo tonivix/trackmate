@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {ToastController} from '@ionic/angular';
 import {select, Store} from '@ngrx/store';
-import * as fromAuth from '../../../app/data/reducers/auth.reducer';
+import * as fromAuth from '../../../data/reducers/user.reducer';
 import {Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -17,9 +17,9 @@ export class ToastService implements OnDestroy {
     destroy$: Subject<boolean> = new Subject<boolean>();
 
     public initialize() {
-        const auth$: Observable<fromAuth.User> = this.store.pipe(select(fromAuth.selectCurrentUser),
+        const currentUser$: Observable<fromAuth.User> = this.store.pipe(select(fromAuth.selectCurrentUser),
             takeUntil(this.destroy$));
-        auth$.subscribe(auth => this.presentToast(`${auth.email} has logged in`));
+        currentUser$.subscribe(user => this.presentToast(`${user.email} has logged in`));
     }
 
     async presentToast(message: string) {

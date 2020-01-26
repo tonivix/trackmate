@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {NavController} from '@ionic/angular';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {select, Store} from '@ngrx/store';
-import * as fromAuth from '../data/reducers/auth.reducer';
+import * as fromUser from '../../data/reducers/user.reducer';
 import {Observable} from 'rxjs';
 import {auth} from 'firebase';
 
@@ -20,11 +20,12 @@ export class RegisterPage {
 
     public user: User = new User();
 
-    public auth$: Observable<fromAuth.User> = this.store.pipe(select(fromAuth.selectCurrentUser));
+    public currentUser$: Observable<fromUser.User>;
 
     constructor(private navCtrl: NavController,
                 private fAuth: AngularFireAuth,
-                private store: Store<fromAuth.User>) {
+                private store: Store<fromUser.User>) {
+        this.currentUser$ = this.store.pipe(select(fromUser.selectCurrentUser));
     }
 
     async register() {

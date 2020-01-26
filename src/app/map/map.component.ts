@@ -1,15 +1,19 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {latLng, marker, tileLayer, Map, LeafletMouseEvent, Marker} from 'leaflet';
 import {User, UserService} from '../../services/user.service';
-import {Observable} from 'rxjs';
-import { firestore } from 'firebase';
+import {Observable, Subject} from 'rxjs';
+import {firestore} from 'firebase';
+import {select, Store} from '@ngrx/store';
+import * as fromUser from '../../data/reducers/user.reducer';
+import {selectCurrentUser} from '../../data/reducers/user.reducer';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'app-map',
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss']
 })
-export class MapComponent /*implements AfterViewInit*/ {
+export class MapComponent implements OnDestroy {
 
     map: Map;
     marker: Marker = marker(latLng(0, 0));
@@ -30,12 +34,14 @@ export class MapComponent /*implements AfterViewInit*/ {
     layers = [
         this.marker
     ];
+    private destroy$: Subject<boolean>;
 
-    private userId = `1HSrrfexcYcLVG8PkJ6UrnesEI33`;
-
-    constructor(private userService: UserService) {
-        this.userObservable = userService.GetUserById(this.userId);
-        this.userObservable.subscribe(user => {
+    constructor(private store: Store<fromUser.User>,
+                private userService: UserService
+    ) {
+        this.store.pipe(select(selectCurrentUser))
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(user => {
             const latlng = latLng(user.lastLocation.latitude, user.lastLocation.longitude);
             this.map.panTo(latlng);
             this.marker.setLatLng(latlng);
@@ -51,9 +57,9 @@ export class MapComponent /*implements AfterViewInit*/ {
                 });*/
     }
 
-    mapClick(e: LeafletMouseEvent): void {
+    async mapClick(e: LeafletMouseEvent): Promise<void> {
         this.user.lastLocation = new firestore.GeoPoint(e.latlng.lat, e.latlng.lng);
-        this.userService.UpdateUser(this.userId, this.user);
+        await this.userService.UpdateUser(this.user.uid, this.user);
     }
 
     centerMap() {
@@ -62,6 +68,10 @@ export class MapComponent /*implements AfterViewInit*/ {
             this.map.setView(latlng, 18);
             this.marker.setLatLng(latlng);
         });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next(true);
     }
 
     /*    ngAfterViewInit(): void {
