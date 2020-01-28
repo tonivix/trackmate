@@ -24,7 +24,7 @@ export const initialState: User = {
 
 const userReducer = createReducer(
     initialState,
-    on(UserActions.userLoaded, (state: User, newState) => ({
+    on(UserActions.userLoggedIn, (state: User, newState) => ({
         displayName: newState.displayName,
         email: newState.email,
         lastLocation: newState.lastLocation,

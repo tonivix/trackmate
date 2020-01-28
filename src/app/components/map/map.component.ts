@@ -1,12 +1,10 @@
 import {Component, OnDestroy} from '@angular/core';
 import {latLng, marker, tileLayer, Map, LeafletMouseEvent, Marker, LatLngExpression} from 'leaflet';
-import {User, UserService} from '../../services/user.service';
 import {Observable, Subject} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import * as fromUser from '../../data/reducers/user.reducer';
-import {selectCurrentUser} from '../../data/reducers/user.reducer';
+import {Store} from '@ngrx/store';
+import {User} from '../../../data/reducers/user.reducer';
 import {takeUntil} from 'rxjs/operators';
-import {userLocationUpdate} from '../../data/actions/user.actions';
+import {UserFacade} from '../../../data/facade/user.facade';
 
 @Component({
     selector: 'app-map',
@@ -38,9 +36,10 @@ export class MapComponent implements OnDestroy {
 
     destroy$: Subject<boolean> = new Subject<boolean>();
 
-    constructor(private store: Store<fromUser.User>
+    constructor(private store: Store<User>,
+                private userFacade: UserFacade,
     ) {
-        this.store.pipe(select(selectCurrentUser))
+        userFacade.getCurrentUser()
             .pipe(takeUntil(this.destroy$))
             .subscribe(user => {
                 this.initialLatLng = latLng(user.lastLocation.latitude, user.lastLocation.longitude);
@@ -51,7 +50,7 @@ export class MapComponent implements OnDestroy {
             });
     }
 
-    private setInitialMapLocation() {
+    setInitialMapLocation() {
         this.map.panTo(this.initialLatLng);
         this.marker.setLatLng(this.initialLatLng);
     }
@@ -60,14 +59,10 @@ export class MapComponent implements OnDestroy {
         this.map = map;
 
         this.setInitialMapLocation();
-
-        /*        navigator.geolocation.getCurrentPosition(position => {
-                    map.setView(latLng(position.coords.latitude, position.coords.longitude), 15);
-                });*/
     }
 
     mapClick(e: LeafletMouseEvent): void {
-        this.store.dispatch(userLocationUpdate({latitude: e.latlng.lat, longitude: e.latlng.lng}));
+        this.userFacade.updateCurrentUserLocation({latitude: e.latlng.lat, longitude: e.latlng.lng});
     }
 
     centerMap() {

@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {NavController} from '@ionic/angular';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {select, Store} from '@ngrx/store';
-import * as fromUser from '../../data/reducers/user.reducer';
+import * as fromUser from '../../../data/reducers/user.reducer';
 import {Observable} from 'rxjs';
 import {auth} from 'firebase';
 

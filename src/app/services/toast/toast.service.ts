@@ -1,13 +1,19 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {ToastController} from '@ionic/angular';
 import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {UserFacade} from '../../../data/facade/user.facade';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ToastService implements OnDestroy {
 
-    constructor(private toastController: ToastController) {
+    constructor(private toastController: ToastController,
+                private userFacade: UserFacade) {
+        userFacade.getCurrentUser().pipe(
+            takeUntil(this.destroy$)
+        ).subscribe(user => this.presentToast(`User logged in: ${user.email}`));
     }
 
     destroy$: Subject<boolean> = new Subject<boolean>();
