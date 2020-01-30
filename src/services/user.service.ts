@@ -19,15 +19,6 @@ export class UserService {
         }
     }
 
-    public GetUsers(): Observable<User[]> {
-        try {
-            const collection = this.db.collection<User>(`users`);
-            return collection.valueChanges();
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
     public async UpdateUser(id: string, user: User) {
         try {
             const doc = this.db.doc<User>(`users/${id}`);

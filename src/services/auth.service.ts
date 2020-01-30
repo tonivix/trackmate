@@ -15,7 +15,7 @@ export class AuthService {
 
     public configureAuthentication() {
         this.fAuth.auth.onAuthStateChanged(userInfo => {
-            if (userInfo) {
+            if (userInfo && userInfo.uid) {
                 const {uid, displayName, email} = userInfo;
                 this.store.dispatch(userLogin({uid, email, displayName}));
             } else {

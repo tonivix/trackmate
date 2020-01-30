@@ -14,5 +14,5 @@ export interface UserLocationPayload {
 
 export const userLogin = createAction('[User] User Logged In', props<UserAuthUpdated>());
 export const userLoggedIn = createAction('[User] User Data Loaded from Db', props<User>());
-export const userLocationUpdate = createAction('[User] User Location Update', props<UserLocationPayload>());
+export const updateCurrentUserLocation = createAction('[User] User Location Update', props<UserLocationPayload>());
 export const userLoggedOut = createAction('[User] User Logged Out');

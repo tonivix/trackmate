@@ -3,6 +3,7 @@ import {Platform} from '@ionic/angular';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {AuthService} from '../services/auth.service';
+import {ToastService} from './services/toast/toast.service';
 
 @Component({
     selector: 'app-root',
@@ -14,7 +15,8 @@ export class AppComponent {
         private platform: Platform,
         private splashScreen: SplashScreen,
         private statusBar: StatusBar,
-        private authService: AuthService
+        private authService: AuthService,
+        private toasterService: ToastService
     ) {
         this.initializeApp();
     }
@@ -24,6 +26,7 @@ export class AppComponent {
             this.statusBar.styleDefault();
             this.splashScreen.hide();
             this.authService.configureAuthentication();
+            this.toasterService.setupSubscriptions();
         });
     }
 }

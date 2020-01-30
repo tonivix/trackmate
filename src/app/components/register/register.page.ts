@@ -25,7 +25,7 @@ export class RegisterPage {
     constructor(private navCtrl: NavController,
                 private fAuth: AngularFireAuth,
                 private store: Store<fromUser.User>) {
-        this.currentUser$ = this.store.pipe(select(fromUser.selectCurrentUser));
+        this.currentUser$ = this.store.pipe(select(fromUser.getCurrentUser));
     }
 
     async register() {

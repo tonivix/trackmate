@@ -1,6 +1,6 @@
 import {Component, OnDestroy} from '@angular/core';
 import {latLng, marker, tileLayer, Map, LeafletMouseEvent, Marker, LatLngExpression} from 'leaflet';
-import {Observable, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {User} from '../../../data/reducers/user.reducer';
 import {takeUntil} from 'rxjs/operators';
@@ -15,7 +15,6 @@ export class MapComponent implements OnDestroy {
 
     map: Map;
     marker: Marker = marker(latLng(0, 0));
-    userObservable: Observable<User>;
     user: User;
     initialLatLng: LatLngExpression;
 

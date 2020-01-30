@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {selectCurrentUser, User} from '../reducers/user.reducer';
+import {getCurrentUser, User} from '../reducers/user.reducer';
 import {Observable} from 'rxjs';
-import {UserLocationPayload, userLocationUpdate} from '../actions/user.actions';
+import {UserLocationPayload, updateCurrentUserLocation} from '../actions/user.actions';
 
 @Injectable({
     providedIn: 'root'
@@ -14,10 +14,10 @@ export class UserFacade {
     }
 
     public getCurrentUser(): Observable<User> {
-        return this.store.pipe(select(selectCurrentUser));
+        return this.store.pipe(select(getCurrentUser));
     }
 
     public updateCurrentUserLocation(userLocation: UserLocationPayload) {
-        this.store.dispatch(userLocationUpdate(userLocation));
+        this.store.dispatch(updateCurrentUserLocation(userLocation));
     }
 }

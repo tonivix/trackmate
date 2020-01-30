@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {Observable} from 'rxjs';
 
 @Component({
     selector: 'app-tab1',
@@ -7,8 +6,6 @@ import {Observable} from 'rxjs';
     styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
-    constructor(userService: UserService) {
-        this.items = userService.GetUsers();
-    }
+
 
 }

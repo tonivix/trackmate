@@ -7,14 +7,6 @@
 </ion-header>
 
 <ion-content>
-    <ion-card class="welcome-card" *ngFor="let item of items | async">
-        <ion-card-header>
-            <ion-card-subtitle>Get Started</ion-card-subtitle>
-            <ion-card-title>{{item.name}}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-            <p>{{ item.lastLocation.latitude }}, {{ item.lastLocation.longitude}}</p>
-        </ion-card-content>
-    </ion-card>
+
 
 </ion-content>

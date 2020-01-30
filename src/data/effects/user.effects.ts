@@ -1,14 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {userLoggedIn, userLocationUpdate, userLogin} from '../actions/user.actions';
+import {userLoggedIn, updateCurrentUserLocation, userLogin} from '../actions/user.actions';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {UserService} from '../../services/user.service';
-import {select, Store} from '@ngrx/store';
-import * as fromUser from '../reducers/user.reducer';
-import {selectCurrentUser} from '../reducers/user.reducer';
-import {ToastService} from '../../app/services/toast/toast.service';
 import GeoPoint = firebase.firestore.GeoPoint;
 import * as firebase from 'firebase';
+import {UserFacade} from '../facade/user.facade';
 
 @Injectable()
 export class UserEffects {
@@ -27,8 +24,8 @@ export class UserEffects {
     ));
 
     userLocationUpdate$ = createEffect(() => this.actions$.pipe(
-        ofType(userLocationUpdate),
-        switchMap(location => this.store.pipe(select(selectCurrentUser))
+        ofType(updateCurrentUserLocation),
+        switchMap(location => this.userFacade.getCurrentUser()
             .pipe(
                 tap(currentUser => this.userService.UpdateUser(currentUser.uid, ({
                     ...currentUser,
@@ -37,10 +34,9 @@ export class UserEffects {
             ))
     ), {dispatch: false});
 
-    constructor(private toastService: ToastService,
+    constructor(private userFacade: UserFacade,
                 private actions$: Actions,
-                private userService: UserService,
-                private store: Store<fromUser.User>) {
+                private userService: UserService) {
     }
 
 }
